@@ -13,14 +13,27 @@ add_executable(CMakeProject2
 )
 
 # Link SFML libraries
-target_link_libraries(CMakeProject2 
-    ${CMAKE_SOURCE_DIR}/library/sfml-graphics.lib
-    ${CMAKE_SOURCE_DIR}/library/sfml-audio.lib
-    ${CMAKE_SOURCE_DIR}/library/sfml-main.lib
-    ${CMAKE_SOURCE_DIR}/library/sfml-system.lib
-    ${CMAKE_SOURCE_DIR}/library/sfml-window.lib
-    ${CMAKE_SOURCE_DIR}/library/sfml-network.lib
-)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_link_libraries(CMakeProject2 
+        ${CMAKE_SOURCE_DIR}/library/sfml-graphics-d.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-audio-d.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-main-d.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-system-d.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-window-d.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-network-d.lib
+        
+    )
+else()
+    target_link_libraries(CMakeProject2 
+        ${CMAKE_SOURCE_DIR}/library/sfml-graphics.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-audio.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-main.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-system.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-window.lib
+        ${CMAKE_SOURCE_DIR}/library/sfml-network.lib
+        
+    )
+endif()
 
 # Include the SFML headers
 include_directories(${CMAKE_SOURCE_DIR}/include)

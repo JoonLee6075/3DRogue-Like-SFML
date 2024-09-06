@@ -29,7 +29,7 @@ char Game::map[25][31] = {
 };
 Game::Game()
 {
-    
+
     initVariables();
     initWindow();
 }
@@ -65,8 +65,9 @@ void Game::initVariables()
     text.setFillColor(sf::Color::White);
     text2.setFont(font);
     p = player(0, 0);
-    map[15][15] = 'o';
-    p.setPosition(15,15);
+    map[14][15] = 'o';
+    //x,y 변경 주의
+    p.setPosition(15, 14);
 
 }
 
@@ -94,24 +95,84 @@ void Game::update()
     else if (repeatCounter > 0)
     {
         repeatCounter--;
+        if (repeatCounter <= 0)
+        {
+            moving = false;
+        }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && repeatCounter == 0 && map[(int)p.getPosition().x - 1][(int)p.getPosition().y] != '#')
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && repeatCounter == 0 && map[(int)p.getPosition().y - 1][(int)p.getPosition().x] != '#')
     {
         moving = true;
         repeatCounter = 30;
         std::pair<int, int> curr = std::make_pair((int)p.getPosition().x, (int)p.getPosition().y);
         map[curr.second][curr.first] = behindPlayer;
 
-        p.setPosition(curr.first , curr.second-1);
+        p.setPosition(curr.first, curr.second - 1);
 
         behindPlayer = map[curr.second][curr.first];
 
-        map[curr.second - 1][ curr.first] = 'o';
+        map[curr.second - 1][curr.first] = 'o';
 
-        mapDisp[1] = (14.f/ 15.f);
+        //28
+        mapDisp[1] = (14.f / 15.f);
         mapDisp[0] = 0;
 
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && repeatCounter == 0 && map[(int)p.getPosition().y][(int)p.getPosition().x - 1] != '#')
+    {
+        moving = true;
+        repeatCounter = 30;
+        std::pair<int, int> curr = std::make_pair((int)p.getPosition().x, (int)p.getPosition().y);
+        map[curr.second][curr.first] = behindPlayer;
+
+        p.setPosition(curr.first - 1, curr.second);
+
+        behindPlayer - map[curr.second][curr.first];
+
+        map[curr.second][curr.first - 1] = 'o';
+
+        mapDisp[0] = (12.f / 15.f);
+        mapDisp[1] = 0;
+
+        //p.setPosition(curr.first,curr.second-)
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && repeatCounter == 0 && map[(int)p.getPosition().y + 1][(int)p.getPosition().x] != '#')
+    {
+        moving = true;
+        repeatCounter = 30;
+        std::pair<int, int> curr = std::make_pair((int)p.getPosition().x, (int)p.getPosition().y);
+        map[curr.second][curr.first] = behindPlayer;
+
+        p.setPosition(curr.first, curr.second + 1);
+
+        behindPlayer = map[curr.second][curr.first];
+
+        map[curr.second + 1][curr.first] = 'o';
+
+        mapDisp[1] = -(14.f / 15.f);
+        mapDisp[0] = 0;
+
+        //p.setPosition(curr.first,curr.second-)
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && repeatCounter == 0 && map[(int)p.getPosition().y][(int)p.getPosition().x + 1] != '#')
+    {
+        moving = true;
+        repeatCounter = 30;
+        std::pair<int, int> curr = std::make_pair((int)p.getPosition().x, (int)p.getPosition().y);
+        map[curr.second][curr.first] = behindPlayer;
+
+        p.setPosition(curr.first + 1, curr.second);
+
+        behindPlayer - map[curr.second][curr.first];
+
+        map[curr.second][curr.first + 1] = 'o';
+
+        mapDisp[0] = -(12.f / 15.f);
+        mapDisp[1] = 0;
+
+        //p.setPosition(curr.first,curr.second-)
+    }
+
 
     // Gradually return to center
     //viewOffsetX *= 0.9f;
@@ -125,15 +186,15 @@ void Game::pollEvents()
     {
         switch (this->event.type)
         {
-            case sf::Event::Closed:
+        case sf::Event::Closed:
             this->window->close();
             break;
-            case sf::Event::KeyPressed:
-                if (this->event.key.code == sf::Keyboard::Escape)
-                {
-                    this->window->close();
-                }
-           
+        case sf::Event::KeyPressed:
+            if (this->event.key.code == sf::Keyboard::Escape)
+            {
+                this->window->close();
+            }
+
         }
     }
 }
@@ -149,11 +210,11 @@ void Game::render()
     for (int j = 0; j <= 14; j += 2)
     {
         // 8 layer player gonna be on layer 4
-        
+
         //600 - 360 = 240
         //400 - 360 = 40
-        text.setPosition(mapPos[0] - (12.f * 30.f) , mapPos[1]-(320.f));
-        
+        text.setPosition(mapPos[0] - (12.f * 30.f), mapPos[1] - (320.f));
+
         // where to put our top left corner of our map
         text.setFillColor(sf::Color(255, 255, 255, (15 - j) * (15 - j)));
 
@@ -165,7 +226,7 @@ void Game::render()
                 previousLocation[0] = text.getPosition().x;
                 previousLocation[1] = text.getPosition().y;
 
-               
+
                 text.setPosition(text.getPosition().x + ((videoMode.width / 2 - text.getPosition().x) * displaceMultiplier), text.getPosition().y + ((videoMode.height / 2 - text.getPosition().y) * displaceMultiplier));
 
                 if (text.getString() != "o" && text.getString() != ".")
@@ -194,13 +255,13 @@ void Game::render()
 
                 }
 
-                text.setPosition(sf::Vector2f(previousLocation[0] , previousLocation[1]));
+                text.setPosition(sf::Vector2f(previousLocation[0], previousLocation[1]));
                 text.setPosition(text.getPosition().x, text.getPosition().y + 28.f);
-                // < - > 28f
+
             }
             text.setPosition(text.getPosition().x + 24.f, mapPos[1] - (320.f));
 
-            //24f diff per row. 15 * 2 + 1 = 31
+
         }
         displaceMultiplier += 0.018;
     }
@@ -253,7 +314,7 @@ void Game::render()
                         this->window->draw(text);
                     }
 
-                   
+
                 }
 
                 text.setPosition(previousLocation);
