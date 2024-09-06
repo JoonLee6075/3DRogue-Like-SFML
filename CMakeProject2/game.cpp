@@ -1,5 +1,5 @@
 #include "game.h"
-
+#include "FileManager.h"
 char Game::map[25][31] = {
     {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
     {'#','.','.','.','.','.','#','.','.','.','.','.','.','.','.','.','.','.','#','.','.','.','.','.','.','.','.','.','.','.','.'},
@@ -55,7 +55,8 @@ void Game::initVariables()
     this->endGame = false;
     this->window = nullptr;
 
-    if (!font.loadFromFile("C:/Users/joonl/source/repos/CMakeProject2/resources/SpaceMono-Regular.ttf"))
+    FileManager fileManager;
+    if (!font.loadFromFile("resources/SpaceMono-Regular.ttf"))
     {
         std::cout << "where the fuck is my font";
     }
@@ -142,11 +143,18 @@ void Game::render()
     this->window->clear(sf::Color::Black);
 
     float displaceMultiplier = 0;
+    //per layer
     float previousLocation[2] = { 0,0 };
+    //where did we come from
     for (int j = 0; j <= 14; j += 2)
     {
-       //675-360
-        text.setPosition(mapPos[0] - (12.f * 30.f) , mapPos[1]-(15.f * 24.f));
+        // 8 layer player gonna be on layer 4
+        
+        //600 - 360 = 240
+        //400 - 360 = 40
+        text.setPosition(mapPos[0] - (12.f * 30.f) , mapPos[1]-(320.f));
+        
+        // where to put our top left corner of our map
         text.setFillColor(sf::Color(255, 255, 255, (15 - j) * (15 - j)));
 
         for (int x = 0; x < 31; x++)
@@ -188,8 +196,11 @@ void Game::render()
 
                 text.setPosition(sf::Vector2f(previousLocation[0] , previousLocation[1]));
                 text.setPosition(text.getPosition().x, text.getPosition().y + 28.f);
+                // < - > 28f
             }
-            text.setPosition(text.getPosition().x + 24.f, mapPos[1] - (15.f * 24.f));
+            text.setPosition(text.getPosition().x + 24.f, mapPos[1] - (320.f));
+
+            //24f diff per row. 15 * 2 + 1 = 31
         }
         displaceMultiplier += 0.018;
     }

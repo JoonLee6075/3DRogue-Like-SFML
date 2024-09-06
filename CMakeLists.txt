@@ -1,9 +1,11 @@
-﻿# CMakeList.txt : 최상위 CMake 프로젝트 파일, 전역 구성을 수행하고
-# 여기에 하위 프로젝트를 포함합니다.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿# Minimum CMake version required
+cmake_minimum_required(VERSION 3.8)
 
-project ("CMakeProject2")
+# Project name
+project(CMakeProject2)
 
-# 하위 프로젝트를 포함합니다.
-add_subdirectory ("CMakeProject2")
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 20)
+
+# Add the subdirectory
+add_subdirectory(CMakeProject2)
